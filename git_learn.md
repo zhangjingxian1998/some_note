@@ -1,3 +1,46 @@
+# git的安装
+## windows
+
+在[官网](https://git-scm.com/downloads)下载与系统对应的版本安装包, 安装过程参照[教程](https://blog.csdn.net/mukes/article/details/115693833), 基本就是全程next
+
+## linux
+直接使用apt安装命令
+```
+sudo apt-get install git
+```
+
+# 配置git用户名与邮箱
+```
+git config --global user.name "Your Name"
+git config --global user.email "email@example.com"
+```
+配置的用户名和邮箱对push代码到远程仓库时的身份验证没有作用，即不用他们进行身份验证；他们仅仅会出现在远程仓库的commits里。仅仅是为你提交代码时附加的身份说明, 为了后期查证方便, 应设置正确信息。[来源](https://blog.csdn.net/ITWANGBOIT/article/details/103618427)
+
+但也有文章指出不设置会造成生成密钥无法使用。[来源](https://blog.csdn.net/weixin_41695715/article/details/119149546)
+
+# 生成私钥和公钥以及代码托管平台创建ssh_key
+
+## windows
+```
+ssh-keygen -t rsa # 执行生成私钥和公钥的命令,连续回车确认。 生成位置默认在user/user_name下的.ssh
+
+```
+
+## linux
+```
+ssh-keygen -t rsa # 默认位置在用户目录的.ssh中
+```
+生成的公钥用于生成代码托管平台的ssh_key
+
+按照图示为代码托管平台生成ssh_key
+
+<img src="./img/git/img1.png" width="50%">
+<img src="./img/git/img2.png" width="50%">
+<img src="./img/git/img3.png" width="50%">
+<img src="./img/git/img4.png" width="50%">
+<img src="./img/git/img5.png" width="50%">
+
+
 # 与远程仓库绑定
 ```
 git init # 将本地文件夹 git 初始化
@@ -16,4 +59,15 @@ git checkout main # 更改完后切换回主分支
 git branch merge dev # 将更改玩的分支融合进主分支
 git push # 融合后推送到远程仓库
 git branch -d dev # 删除分支
+```
+
+# 多人协同开发
+
+# git 工作流程
+
+# git指令详解
+```
+1、git init 
+会将一个本地文件夹转换为git形式, 在执行命令的文件夹下会生成一个.git文件夹
+2、git add
 ```
