@@ -41,7 +41,7 @@ ssh-keygen -t rsa # 默认位置在用户目录的.ssh中
 <img src="./img/git/img5.png" width="50%">
 
 
-# 与远程仓库绑定
+# 与远程仓库同步
 ```
 git init # 将本地文件夹 git 初始化
 git add . # 将本地文件进行添加, . 是全部文件, 可以通过具体文件名进行添加。添加是添加到本地缓存区
@@ -64,10 +64,23 @@ git branch -d dev # 删除分支
 # 多人协同开发
 
 # git 工作流程
+![](./img/git/git_work_process.jpg)
+# .gitignore
 
 # git指令详解
 ```
 1、git init 
 会将一个本地文件夹转换为git形式, 在执行命令的文件夹下会生成一个.git文件夹
 2、git add
+将更改后的文件添加进缓存区
+git add -p 可以选择添加哪部分代码而略过哪部分代码
+3、git commit
+将缓存区内的文件进行提交
+4、git branch
+git branch -m/M <old_branch_name> <new_branch_name>
+5、git merge
+将某个分支融合到当前分支
+git merge <merged_branch_name>
+6、git push
+7、git pull
 ```
