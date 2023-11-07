@@ -55,6 +55,8 @@ git push -u origin main # 推送分支到远程,-u 参数的意思是将这个�
 ```
 git branch dev # 创建名为dev的分支 (develop:开发)
 git checkout dev # 切换到新建分支，在该分支上进行更改
+git add .
+git commit -m 'commit text'
 git checkout main # 更改完后切换回主分支
 git branch merge dev # 将更改玩的分支融合进主分支
 git push # 融合后推送到远程仓库
