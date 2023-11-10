@@ -1,2 +1,4 @@
 *.npy
 .vscode
+data
+.gitignore
