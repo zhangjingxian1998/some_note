@@ -34,11 +34,11 @@ ssh-keygen -t rsa # 默认位置在用户目录的.ssh中
 
 按照图示为代码托管平台生成ssh_key
 
-<img src="./img/git/img1.png" width="50%">
-<img src="./img/git/img2.png" width="50%">
-<img src="./img/git/img3.png" width="50%">
-<img src="./img/git/img4.png" width="50%">
-<img src="./img/git/img5.png" width="50%">
+<img src="../img/git/img1.png" width="50%">
+<img src="../img/git/img2.png" width="50%">
+<img src="../img/git/img3.png" width="50%">
+<img src="../img/git/img4.png" width="50%">
+<img src="../img/git/img5.png" width="50%">
 
 
 # 与远程仓库同步
