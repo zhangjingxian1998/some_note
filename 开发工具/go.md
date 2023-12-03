@@ -11,13 +11,21 @@ go version
 # 新版改成如下链接
 go env -w GO111MODULE=on
 go env -w GOPROXY=https://proxy.golang.com.cn,direct
+
+在用户下.bashrc下设置
+export GOPATH=$HOME/go
+export PATH=$PATH:$GOROOT/bin:$GOPATH/bin
 ```
 
 ## 在vscode中配置
 ```
+进入$GOPATH文件夹中
 Ctrl + Shift + P
 GO: Install/Updata Tools
 install all
-# 可以进行debug
-go mod init name 
+
+在其他GO项目中
+go mod init <moudle name>
+函数的入口必须是main
+在除package main外的package定义的函数必须是大写字母开头
 ```
