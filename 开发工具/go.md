@@ -28,4 +28,15 @@ install all
 go mod init <moudle name>
 函数的入口必须是main
 在除package main外的package定义的函数必须是大写字母开头
+
+# 解决导入包会自动删除
+在setting中 GO:Alternate Tools
+添加
+"[go]":{
+        "editor.insertSpaces": false,
+        "editor.formatOnSave": true,
+        "editor.codeActionsOnSave": {
+            "source.organizeImports": false
+        }
+}
 ```
