@@ -86,3 +86,6 @@ git merge <merged_branch_name>
 6、git push
 7、git pull
 ```
+
+# pull request
+fork 他人的github仓库，然后在自己fork后的仓库进行更改，更改后在自己githu仓库中进行pull request
