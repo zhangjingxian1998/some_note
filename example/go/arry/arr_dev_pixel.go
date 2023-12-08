@@ -143,10 +143,10 @@ func Arr_dev_pixel_float64(arr1 []float64, arr2 []float64) []float64 {
 	return res
 }
 
-func Arr_dev_pixel_int(arr1 []int, arr2 []int) []float32 {
-	res := make([]float32, len(arr1))
+func Arr_dev_pixel_int(arr1 []int, arr2 []int) []float64 {
+	res := make([]float64, len(arr1))
 	for i := 0; i < len(arr1); i++ {
-		res[i] = float32(arr1[i]) / float32(arr2[i])
+		res[i] = float64(arr1[i]) / float64(arr2[i])
 	}
 	return res
 }

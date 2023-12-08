@@ -33,5 +33,10 @@ func Whole_show() {
 	fmt.Println(Arr_random_float64(10))
 	fmt.Println(Arr_mul_pixel(arr2, b))
 	fmt.Println(Arr_var(arr2))
-	fmt.Println(Arr_random_normalize_float64(10, 1))
+	aa := Arr_random_noise(10, 0, 10)
+	fmt.Println(aa)
+	fmt.Println(Arr_mean(aa))
+	fmt.Println(Arr_std_var(aa))
+	// arr_test := []int{1, 2, 3, 4, 5}
+	// fmt.Println(Arr_std_var(arr_test))
 }

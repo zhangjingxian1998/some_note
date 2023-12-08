@@ -1,6 +1,8 @@
 package arry
 
-import "math/rand"
+import (
+	"math/rand"
+)
 
 func Arr_random_int(lenght int, range_ int) []int {
 	arr := make([]int, lenght)
@@ -36,13 +38,16 @@ func Arr_random_float64(lenght int) []float64 {
 // 	return tmp
 // }
 
-func Arr_random_normalize_float64(length int, scale float64) interface{} {
+func Arr_random_noise(length int, mean float64, sigma float64) interface{} {
 	arr := Arr_random_float64(length)
-	tmp := Arr_mul_pixel(arr, scale)
-	mean_arr := Arr_mean(tmp)
-	var_arr := Arr_var(tmp)
-	tmp = Arr_sub_pixel(tmp, mean_arr)
-	tmp = Arr_dev_pixel(tmp, var_arr)
-	tmp = Arr_mul_pixel(tmp, scale)
+	arr1 := Arr_sub_pixel(arr, 0.5)
+	arr2 := Arr_mul_pixel(arr1, 2)
+
+	mean_arr := Arr_mean(arr2)
+	std_var_arr := Arr_std_var(arr2)
+	tmp := Arr_sub_pixel(arr2, mean_arr)
+	tmp = Arr_dev_pixel(tmp, std_var_arr)
+	tmp = Arr_mul_pixel(tmp, sigma)
+	tmp = Arr_add_pixel(tmp, mean)
 	return tmp
 }
