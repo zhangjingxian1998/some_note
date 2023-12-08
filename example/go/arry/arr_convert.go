@@ -52,3 +52,11 @@ func Float322Float64(arr []float32) []float64 {
 	}
 	return arr_
 }
+
+func Float642Float32(arr []float64) []float32 {
+	arr_ := make([]float32, len(arr))
+	for i := 0; i < len(arr); i++ {
+		arr_[i] = float32(arr[i])
+	}
+	return arr_
+}
