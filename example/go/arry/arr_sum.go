@@ -26,17 +26,19 @@ func Arr_sum(arrs interface{}) interface{} {
 	case []int:
 		res = res.(int)
 		arrs := Interface2Int(arrs)
-		res = Arr_sum_int(arrs)
+		return Arr_sum_int(arrs)
 	case []float32:
 		res = res.(float32)
 		arrs := Interface2Float32(arrs)
-		res = Arr_sum_float32(arrs)
+		return Arr_sum_float32(arrs)
 	case []float64:
 		res = res.(float64)
 		arrs := Interface2Float64(arrs)
-		res = Arr_sum_float64(arrs)
+		return Arr_sum_float64(arrs)
+	default:
+		fmt.Println("Only accept int float32 float64, but get ",reflect.TypeOf(arrs))
+		panic(' ')
 	}
-	return res
 }
 
 func Arr_sum_int(arr []int) int {

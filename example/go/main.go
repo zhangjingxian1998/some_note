@@ -12,7 +12,6 @@ func main() {
 	print_practice.Whole_show()
 	fibonacci.Whole_show()
 	arry.Whole_show()
-	Linear_calculate()
 }
 
 func Linear_calculate() {

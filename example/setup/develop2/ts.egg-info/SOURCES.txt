@@ -1,0 +1,9 @@
+setup.py
+ts/__init__.py
+ts/test.py
+ts.egg-info/PKG-INFO
+ts.egg-info/SOURCES.txt
+ts.egg-info/dependency_links.txt
+ts.egg-info/top_level.txt
+ts2/__init__.py
+ts2/test.py
