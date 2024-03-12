@@ -57,6 +57,7 @@ sudo rm nvidia-drm-outputclass.conf
 初次挂载需要格式化
 
 ```
+sudo umount /dev/sdb1 # 按照子盘符名称先取消挂载
 sudo fdisk -l #查看硬盘盘符名称
 sudo fdisk /dev/sdb #根据盘符名称考试格式化
 按g格式化
