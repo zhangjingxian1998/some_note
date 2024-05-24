@@ -9,7 +9,7 @@ apt-get update
 apt-get upgrade
 apt-get install build-essential
 ```
-
+sudo useradd -d /media/dataStore/gjsh -m -s /bin/bash gjsh
 由于系统不带pip, 如需使用本机自带python, 可以安装pip
 
 > #### 方法一：

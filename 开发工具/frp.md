@@ -73,8 +73,9 @@ WantedBy=multi-user.target
 然后执行命令
 
 ```
-sudo systemctl start **
 sudo systemctl enable **
+sudo systemctl start **
+sudo systemctl status **
 ```
 
 echo $PATH

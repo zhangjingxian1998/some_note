@@ -40,13 +40,17 @@ tar -xvf cudnn-linux-x86_64-8.6.0.163_cuda11-archive.tar.xz
 将对应文件拷入cuda安装路径
 
 ```
-sudo cp /include/** /usr/local/cuda/include/
-sudo cp /lib/libcudnn* /usr/local/cuda/lib64/
+sudo cp ./include/** /usr/local/cuda/include/
+sudo cp ./lib/libcudnn* /usr/local/cuda/lib64/
 sudo chmod a+r /usr/local/cuda/include/cudnn.h
 sudo chmod a+r /usr/local/cuda/lib64/libcudnn*
-sudo cp include/cudnn_version.h    /usr/local/cuda/include/
+sudo cp ./include/cudnn_version.h    /usr/local/cuda/include/
 
 验证
 cat /usr/local/cuda/include/cudnn_version.h | grep CUDNN_MAJOR -A 2
 ```
 [同一机子多个cuda](https://www.yii666.com/blog/358463.html?action=onAll)
+
+vim ~/.bashrc
+export PATH="/usr/local/cuda-10.1/bin:$PATH"
+export LD_LIBRARY_PATH="/usr/local/cuda-10.1/lib64:$LD_LIBRARY_PATH"
