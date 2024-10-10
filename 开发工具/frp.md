@@ -11,6 +11,10 @@ cd frp_****_linux_amd64
 vim frps.ini
 bind_port 7000
 （此处为默认值，就是你要将本地端与云服务器端的转发端口号）云服务器中安全策略里面得设置开放此端口
+# 面板访问
+dashboard_port = 7500
+dashboard_user = admin
+dashboard_pwd = admin
 
 # 设置完后启动
 nohup ./frps -c ./frps.ini &
