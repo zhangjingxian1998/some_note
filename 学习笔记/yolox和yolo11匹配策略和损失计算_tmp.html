@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>yolox和yolo11匹配策略和损失计算.md</title>
+<meta http-equiv="Content-type" content="text/html;charset=UTF-8">
+
+<style>
+/* https://github.com/microsoft/vscode/blob/master/extensions/markdown-language-features/media/markdown.css */
+/*---------------------------------------------------------------------------------------------
+ *  Copyright (c) Microsoft Corporation. All rights reserved.
+ *  Licensed under the MIT License. See License.txt in the project root for license information.
+ *--------------------------------------------------------------------------------------------*/
+
+body {
+	font-family: var(--vscode-markdown-font-family, -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif);
+	font-size: var(--vscode-markdown-font-size, 14px);
+	padding: 0 26px;
+	line-height: var(--vscode-markdown-line-height, 22px);
+	word-wrap: break-word;
+}
+
+#code-csp-warning {
+	position: fixed;
+	top: 0;
+	right: 0;
+	color: white;
+	margin: 16px;
+	text-align: center;
+	font-size: 12px;
+	font-family: sans-serif;
+	background-color:#444444;
+	cursor: pointer;
+	padding: 6px;
+	box-shadow: 1px 1px 1px rgba(0,0,0,.25);
+}
+
+#code-csp-warning:hover {
+	text-decoration: none;
+	background-color:#007acc;
+	box-shadow: 2px 2px 2px rgba(0,0,0,.25);
+}
+
+body.scrollBeyondLastLine {
+	margin-bottom: calc(100vh - 22px);
+}
+
+body.showEditorSelection .code-line {
+	position: relative;
+}
+
+body.showEditorSelection .code-active-line:before,
+body.showEditorSelection .code-line:hover:before {
+	content: "";
+	display: block;
+	position: absolute;
+	top: 0;
+	left: -12px;
+	height: 100%;
+}
+
+body.showEditorSelection li.code-active-line:before,
+body.showEditorSelection li.code-line:hover:before {
+	left: -30px;
+}
+
+.vscode-light.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.15);
+}
+
+.vscode-light.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(0, 0, 0, 0.40);
+}
+
+.vscode-light.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-dark.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.4);
+}
+
+.vscode-dark.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 255, 255, 0.60);
+}
+
+.vscode-dark.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+.vscode-high-contrast.showEditorSelection .code-active-line:before {
+	border-left: 3px solid rgba(255, 160, 0, 0.7);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line:hover:before {
+	border-left: 3px solid rgba(255, 160, 0, 1);
+}
+
+.vscode-high-contrast.showEditorSelection .code-line .code-line:hover:before {
+	border-left: none;
+}
+
+img {
+	max-width: 100%;
+	max-height: 100%;
+}
+
+a {
+	text-decoration: none;
+}
+
+a:hover {
+	text-decoration: underline;
+}
+
+a:focus,
+input:focus,
+select:focus,
+textarea:focus {
+	outline: 1px solid -webkit-focus-ring-color;
+	outline-offset: -1px;
+}
+
+hr {
+	border: 0;
+	height: 2px;
+	border-bottom: 2px solid;
+}
+
+h1 {
+	padding-bottom: 0.3em;
+	line-height: 1.2;
+	border-bottom-width: 1px;
+	border-bottom-style: solid;
+}
+
+h1, h2, h3 {
+	font-weight: normal;
+}
+
+table {
+	border-collapse: collapse;
+}
+
+table > thead > tr > th {
+	text-align: left;
+	border-bottom: 1px solid;
+}
+
+table > thead > tr > th,
+table > thead > tr > td,
+table > tbody > tr > th,
+table > tbody > tr > td {
+	padding: 5px 10px;
+}
+
+table > tbody > tr + tr > td {
+	border-top: 1px solid;
+}
+
+blockquote {
+	margin: 0 7px 0 5px;
+	padding: 0 16px 0 10px;
+	border-left-width: 5px;
+	border-left-style: solid;
+}
+
+code {
+	font-family: Menlo, Monaco, Consolas, "Droid Sans Mono", "Courier New", monospace, "Droid Sans Fallback";
+	font-size: 1em;
+	line-height: 1.357em;
+}
+
+body.wordWrap pre {
+	white-space: pre-wrap;
+}
+
+pre:not(.hljs),
+pre.hljs code > div {
+	padding: 16px;
+	border-radius: 3px;
+	overflow: auto;
+}
+
+pre code {
+	color: var(--vscode-editor-foreground);
+	tab-size: 4;
+}
+
+/** Theming */
+
+.vscode-light pre {
+	background-color: rgba(220, 220, 220, 0.4);
+}
+
+.vscode-dark pre {
+	background-color: rgba(10, 10, 10, 0.4);
+}
+
+.vscode-high-contrast pre {
+	background-color: rgb(0, 0, 0);
+}
+
+.vscode-high-contrast h1 {
+	border-color: rgb(0, 0, 0);
+}
+
+.vscode-light table > thead > tr > th {
+	border-color: rgba(0, 0, 0, 0.69);
+}
+
+.vscode-dark table > thead > tr > th {
+	border-color: rgba(255, 255, 255, 0.69);
+}
+
+.vscode-light h1,
+.vscode-light hr,
+.vscode-light table > tbody > tr + tr > td {
+	border-color: rgba(0, 0, 0, 0.18);
+}
+
+.vscode-dark h1,
+.vscode-dark hr,
+.vscode-dark table > tbody > tr + tr > td {
+	border-color: rgba(255, 255, 255, 0.18);
+}
+
+</style>
+
+<style>
+/* Tomorrow Theme */
+/* http://jmblog.github.com/color-themes-for-google-code-highlightjs */
+/* Original theme - https://github.com/chriskempson/tomorrow-theme */
+
+/* Tomorrow Comment */
+.hljs-comment,
+.hljs-quote {
+	color: #8e908c;
+}
+
+/* Tomorrow Red */
+.hljs-variable,
+.hljs-template-variable,
+.hljs-tag,
+.hljs-name,
+.hljs-selector-id,
+.hljs-selector-class,
+.hljs-regexp,
+.hljs-deletion {
+	color: #c82829;
+}
+
+/* Tomorrow Orange */
+.hljs-number,
+.hljs-built_in,
+.hljs-builtin-name,
+.hljs-literal,
+.hljs-type,
+.hljs-params,
+.hljs-meta,
+.hljs-link {
+	color: #f5871f;
+}
+
+/* Tomorrow Yellow */
+.hljs-attribute {
+	color: #eab700;
+}
+
+/* Tomorrow Green */
+.hljs-string,
+.hljs-symbol,
+.hljs-bullet,
+.hljs-addition {
+	color: #718c00;
+}
+
+/* Tomorrow Blue */
+.hljs-title,
+.hljs-section {
+	color: #4271ae;
+}
+
+/* Tomorrow Purple */
+.hljs-keyword,
+.hljs-selector-tag {
+	color: #8959a8;
+}
+
+.hljs {
+	display: block;
+	overflow-x: auto;
+	color: #4d4d4c;
+	padding: 0.5em;
+}
+
+.hljs-emphasis {
+	font-style: italic;
+}
+
+.hljs-strong {
+	font-weight: bold;
+}
+</style>
+
+<style>
+/*
+ * Markdown PDF CSS
+ */
+
+ body {
+	font-family: -apple-system, BlinkMacSystemFont, "Segoe WPC", "Segoe UI", "Ubuntu", "Droid Sans", sans-serif, "Meiryo";
+	padding: 0 12px;
+}
+
+pre {
+	background-color: #f8f8f8;
+	border: 1px solid #cccccc;
+	border-radius: 3px;
+	overflow-x: auto;
+	white-space: pre-wrap;
+	overflow-wrap: break-word;
+}
+
+pre:not(.hljs) {
+	padding: 23px;
+	line-height: 19px;
+}
+
+blockquote {
+	background: rgba(127, 127, 127, 0.1);
+	border-color: rgba(0, 122, 204, 0.5);
+}
+
+.emoji {
+	height: 1.4em;
+}
+
+code {
+	font-size: 14px;
+	line-height: 19px;
+}
+
+/* for inline code */
+:not(pre):not(.hljs) > code {
+	color: #C9AE75; /* Change the old color so it seems less like an error */
+	font-size: inherit;
+}
+
+/* Page Break : use <div class="page"/> to insert page break
+-------------------------------------------------------- */
+.page {
+	page-break-after: always;
+}
+
+</style>
+
+<script src="https://unpkg.com/mermaid/dist/mermaid.min.js"></script>
+</head>
+<body>
+  <script>
+    mermaid.initialize({
+      startOnLoad: true,
+      theme: document.body.classList.contains('vscode-dark') || document.body.classList.contains('vscode-high-contrast')
+          ? 'dark'
+          : 'default'
+    });
+  </script>
+<p>yolox的三个预测头输出
+为每个anchor point分别预测[中心点偏移量，宽高]，有无目标置信度，类别置信度。</p>
+<p>yolo11的预测头输出
+预测anchor point距离框上下左右边界的距离和类别置信度</p>
+<p>由于anchor point数量众多，需要设定一种匹配机制，为每个gt框分配一个最合适的预测框，这样才能计算预测损失，达到学习的目的。</p>
+<h1 id="yolox">yolox</h1>
+<p>匹配时需要知道每个anchor point对应预测框的代价值。
+代价值由3部分构成。</p>
+<ol>
+<li>box_iou：anchor point与gt框的iou。</li>
+<li>cls_score：anchor point的类别置信度和有无目标置信度的乘积。</li>
+<li>in_box_center：anchor需要位于gt框中心点附近，且落入gt框内。如果anchor point不满足这个要求，则代价值设为无穷大。</li>
+</ol>
+<p>然后按照每个gt框和每个anchor point对应预测框的代价值，选择代价值最小的预测框为该gt框的预测框。每个gt框最多匹配10个预测框，最少匹配1个预测框。</p>
+<p>如果某个预测框被分配给多个gt框，则按照代价值最小原则分配gt框。</p>
+<p>计算损失时，预测中心点偏移和宽高的网络头使用IoU损失监督学习，两个预测置信度的网络头用bce损失监督学习。</p>
+<h1 id="yolo11">yolo11</h1>
+<p>而对于yolo11来说，由于不需要考虑中心点是否落于gt中心点范围内，只需要考虑anchor point是否落在gt框内即可。</p>
+<p>根据每个gt框和每个anchor point的IoU和类别置信度，计算出每个anchor point的得分值。</p>
+<p>为每个gt框分配topk个预测框，如果有某些预测框被分配给多个gt框，则按照得分值最大原则分配gt框。</p>
+<h2 id="1-%E5%88%9B%E5%BB%BAanchor-point">1. 创建anchor point</h2>
+<pre class="hljs"><code><div>make_anchors(feats, self.stride, <span class="hljs-number">0.5</span>)
+</div></code></pre>
+<p>其构建的anchor point是代表着中心点，从0.5开始，步长为1.<br>
+<img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_anchor.png" alt=""></p>
+<h2 id="2-gt%E5%80%BC%E9%A2%84%E5%A4%84%E7%90%86">2. gt值预处理</h2>
+<p>将其从归一化的xywh转化为原始框的坐标xyxy<br>
+<img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_preprocess.png" alt=""></p>
+<h2 id="3-%E8%AE%A1%E7%AE%97%E6%AF%8F%E4%B8%AAanchor%E9%A2%84%E6%B5%8B%E7%9A%84%E6%A1%86">3. 计算每个anchor预测的框</h2>
+<p>channel是64，为每个anchor的上下左右预测16个偏移概率，在[0,15]上积分，得到每个anchor的上下左右的偏移值。再在anchor point坐标上对这四个方向进行偏移，返回xyxy形式。<br>
+<img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_decode_box.png" alt="">
+<img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_dist2box.png" alt=""></p>
+<h2 id="4-gt%E6%A1%86%E5%88%86%E9%85%8D">4. gt框分配</h2>
+<p>为每个gt框分配topk个预测框来进行损失计算。<br>
+<img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_align.png" alt=""></p>
+<ol>
+<li>只保留存在于gt框内的anchor point</li>
+<li>计算每个anchor point与gt框的iou,记为overlap。再计算分类得分和iou的加权和作为分配得分align_metric</li>
+<li>为每个gt框取topk个iou最大的anchor point</li>
+</ol>
+<p><img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_get_pos.png" alt=""></p>
+<ol start="4">
+<li>如果有预测的anchor框匹配了多个gt框，则只保留iou最大的那个匹配结果。</li>
+</ol>
+<p><img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_highest_iou.png" alt=""></p>
+<ol start="5">
+<li>根据上述计算结果，进行gt和anchor point预测框的分配。</li>
+</ol>
+<p><img src="file:///d:/zhangjx/some_note/学习笔记/img/yolo11_get_target.png" alt=""></p>
+<h2 id="5-%E8%AE%A1%E7%AE%97%E6%8D%9F%E5%A4%B1">5. 计算损失</h2>
+<p>分类损失使用bce损失
+回归损失使用CIoU损失和DFL损失</p>
+<p>CIoU损失</p>
+<p>$L_{CIoU} = 1 - IoU + \frac{\rho^2(b, b^g)}{c^2} + \alpha v$</p>
+<ol>
+<li>
+<p>$IoU$ 是交并比（Intersection over Union）。</p>
+</li>
+<li>
+<p>$\rho$(b, b^g) 是两个边界框中心点之间的欧几里得距离。</p>
+</li>
+<li>
+<p>$c$ 是最小包围框（convex hull）的对角线长度。</p>
+</li>
+<li>
+<p>$v$ 是衡量长宽比一致性的度量：计算的是预测框和gt框的宽高比率，如果二者宽高比相差较大，则v值大。</p>
+</li>
+</ol>
+<p>$v = \frac{4}{\pi^2} \left( \tan^{-1} \frac{w^g}{h^g} - \tan^{-1} \frac{w}{h} \right)^2
+$</p>
+<p>$\alpha = \frac{v}{(1 - IoU) + v}$</p>
+<p>DFL损失
+先将gt框转换为对应anchor朝上下左右四个方向的偏移。将偏移量限制在设定的reg_max范围内。</p>
+<pre class="hljs"><code><div><span class="hljs-function"><span class="hljs-keyword">def</span> <span class="hljs-title">bbox2dist</span><span class="hljs-params">(anchor_points, bbox, reg_max)</span>:</span>
+    <span class="hljs-string">"""Transform bbox(xyxy) to dist(ltrb)."""</span>
+    <span class="hljs-comment"># bbox xyxy</span>
+    x1y1, x2y2 = bbox.chunk(<span class="hljs-number">2</span>, <span class="hljs-number">-1</span>)
+    <span class="hljs-keyword">return</span> torch.cat((anchor_points - x1y1, x2y2 - anchor_points), <span class="hljs-number">-1</span>).clamp_(<span class="hljs-number">0</span>, reg_max - <span class="hljs-number">0.01</span>)  <span class="hljs-comment"># dist (lt, rb)</span>
+</div></code></pre>
+<p>然后对偏移量左右取整。比如说第一个gt框的上偏移量计算出来是5.3，那么tl=5,tr=6,wl=0.7,wr=0.3。</p>
+<p><img src="file:///d:/zhangjx/some_note/学习笔记/img/dfl_loss.png" alt=""></p>
+
+</body>
+<script type="text/javascript" src="http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+<script type="text/x-mathjax-config"> MathJax.Hub.Config({ tex2jax: {inlineMath: [['$', '$']]}, messageStyle: "none" });</script>
+</html>
