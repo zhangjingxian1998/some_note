@@ -2,3 +2,7 @@
 .vscode
 data
 .gitignore
+
+example/pytorch/save_img
+example/pytorch/save_img_0.05
+一些想法/yolo11n.pt
